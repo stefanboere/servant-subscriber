@@ -35,7 +35,9 @@ type RequestHeaders = [RequestHeader]
 data Request = Subscribe !HttpRequest
              | Unsubscribe !HttpRequest
              | SetPongRequest !HttpRequest
-             | SetCloseRequest !HttpRequest deriving (Generic)
+             | SetCloseRequest !HttpRequest
+             | SimpleRequest !HttpRequest -- ^ Request without subscribing
+              deriving (Generic)
 
 instance FromJSON Request
 instance ToJSON Request
@@ -70,3 +72,4 @@ requestPath req = httpPath $ case req of
                     Unsubscribe hReq -> hReq
                     SetPongRequest hReq -> hReq
                     SetCloseRequest hReq -> hReq
+                    SimpleRequest hReq -> hReq

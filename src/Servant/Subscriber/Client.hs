@@ -160,6 +160,7 @@ handleRequests b c = forever $ do
         let doIt = doRequestIgnoreResult httpReq
         atomically $ writeTVar (closeCommandRef c) doIt
         writeResponse c $ Subscribed httpReq
+      Just (SimpleRequest path) -> getServerResponse b path (writeResponse c)
  where
    doRequestIgnoreResult :: HttpRequest -> IO ()
    doRequestIgnoreResult req' = void $ requestResource b req' (const (pure ResponseReceived))
