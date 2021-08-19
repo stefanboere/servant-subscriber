@@ -123,7 +123,7 @@ addRequest req c = do
     trace ("Added request for PATH:" <> show path) $ pure ()
     let sub  = subscriber c
     tState <- subscribe path sub
-    modifyTVar' (monitors c) $ at req .~ Just (StatusMonitor req tState Nothing)
+    modifyTVar' (monitors c) $ at req ?~ StatusMonitor req tState Nothing
 
 -- | Remove a Request, also unsubscribes from subscriber and deletes our monitor
 --   if it was the last Request for the given path.
@@ -207,7 +207,7 @@ getServerResponse b req sendResponse = void $ requestResource b req
     let isGoodStatus = status >= 200 && status < 300 -- We only accept success
     sendResponse $ if isGoodStatus
                    then
-                     Resp.Modified req response
+                     Resp.Modified req httpResponse
                    else
                      Resp.HttpRequestFailed req httpResponse
     return ResponseReceived
@@ -243,7 +243,7 @@ updateOldStatus m = (fullMonitor m) {
 
 monitorsFromList :: [StatusMonitor] -> ClientMonitors
 monitorsFromList ms = let
-    reqs = map (request) ms
+    reqs = map request ms
     assList = zip reqs ms
   in
     Map.fromList assList

@@ -40,7 +40,7 @@ type ResponseHeaders = R.RequestHeaders
 
 data Response =
     Subscribed !R.HttpRequest
-  | Modified !R.HttpRequest !ResponseBody -- If the full response is needed an additional FullSubscribe command with an appropriate additional response type will need to be added.
+  | Modified !R.HttpRequest !HttpResponse
   | Deleted !Path
   | Unsubscribed !R.HttpRequest
   | HttpRequestFailed !R.HttpRequest !HttpResponse
